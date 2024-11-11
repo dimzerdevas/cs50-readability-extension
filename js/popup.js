@@ -36,6 +36,14 @@ function evaluateText(text) {
   evaluation.textContent = `Words: ${words}, Letters: ${letterCount}, Sentence count: ${sentenceCount}, Grade: ${grade}`;
 }
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "evaluateText") {
+    // Handle the message and display the selected text
+    const text = evaluateText(message.selectedText)
+    alert(text);
+  }
+});
+
 document.addEventListener("DOMContentLoaded", function () {
   const evaluateArticleBtn = document.getElementById("evaluateArticleBtn");
 

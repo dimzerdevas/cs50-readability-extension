@@ -3,7 +3,7 @@
   "name": "Article Summarizer",
   "version": "1.0",
   "description": "Evaluates and summarizes articles you read.",
-  "permissions": ["activeTab", "storage"],
+  "permissions": ["activeTab", "storage", "contextMenus", "scripting"],
   "devtools_page": "/html/devtools.html",
   "action": {
     "default_popup": "/html/popup.html",
@@ -12,6 +12,9 @@
       "48": "images/icon48.png",
       "128": "images/icon128.png"
     }
+  },
+  "background": {
+    "service_worker": "/js/background.js"
   },
   "content_scripts": [
     {
