@@ -1,25 +1,25 @@
 {
   "manifest_version": 3,
-  "name": "Article Summarizer",
+  "name": "CS50: Readability",
   "version": "1.0",
-  "description": "Evaluates and summarizes articles you read.",
-  "permissions": ["activeTab", "storage", "contextMenus", "scripting"],
-  "devtools_page": "/html/devtools.html",
+  "description": "An extension to evaluate readability, using the CS50 formula.",
+  "permissions": ["activeTab", "contextMenus", "scripting"],
+  "devtools_page": "/src/panel/index.html",
   "action": {
-    "default_popup": "/html/popup.html",
+    "default_popup": "src/panel/index.html",
     "default_icon": {
-      "16": "images/icon16.png",
-      "48": "images/icon48.png",
-      "128": "images/icon128.png"
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
     }
   },
   "background": {
-    "service_worker": "/js/background.js"
+    "service_worker": "src/background.js"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["/js/content.js"]
+      "js": ["src/content.js"]
     }
   ]
 }
