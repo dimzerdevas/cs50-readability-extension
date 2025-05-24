@@ -1,0 +1,8 @@
+.info {
+  font-weight: bold;
+  font-size: 1.4em;
+}
+
+.info > span {
+  font-weight: 400;
+}

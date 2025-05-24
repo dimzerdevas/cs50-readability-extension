@@ -4,22 +4,14 @@
   "version": "1.0",
   "description": "An extension to evaluate readability, using the CS50 formula.",
   "permissions": ["activeTab", "contextMenus", "scripting"],
-  "devtools_page": "/src/panel/index.html",
-  "action": {
-    "default_popup": "src/panel/index.html",
-    "default_icon": {
-      "16": "assets/icons/icon16.png",
-      "48": "assets/icons/icon48.png",
-      "128": "assets/icons/icon128.png"
-    }
-  },
+  "devtools_page": "src/panel/dist/index.html",
   "background": {
     "service_worker": "src/background.js"
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["src/content.js"]
-    }
-  ]
+  // "content_scripts": [
+  //   {
+  //     "matches": ["<all_urls>"],
+  //     "js": ["src/panel/index.html"]
+  //   }
+  // ]
 }
