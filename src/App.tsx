@@ -1,56 +1,24 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-
-type ReadabilityData = {
-  letterCount: number;
-  wordCount: number;
-  sentenceCount: number;
-  grade: number | string;
-  summary: string;
-};
+import type { ReadabilityData } from "./intefaces";
+import { handleActionMessage } from "./utils";
+import { LOCAL_STORAGE_KEY } from "./constants";
 
 function App() {
   const [readingText, setReadingText] = useState<ReadabilityData | null>(null);
 
   useEffect(() => {
-    // chrome.devtools.panels.create(
-    //   "CS50: Evaluate Readability",
-    //   "",
-    //   "/public/panel.html",
-    //   function (panel) {
-    //     console.log("panel created", panel);
-    //   }
-    // );
+    const stored = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (stored) {
+      setReadingText(JSON.parse(stored));
+    }
 
-    // Listen for messages from the background script
-    const handler = ({
-      action,
-      letterCount,
-      wordCount,
-      sentenceCount,
-      grade,
-      summary,
-    }: {
-      action: string;
-      letterCount: number;
-      wordCount: number;
-      sentenceCount: number;
-      grade: number;
-      summary: string;
-    }) => {
-      if (action === "evaluateReadability") {
-        setReadingText({
-          letterCount,
-          wordCount,
-          sentenceCount,
-          grade,
-          summary,
-        });
-      }
-    };
-    chrome.runtime.onMessage.addListener(handler);
+    chrome.runtime.onMessage.addListener((message) =>
+      handleActionMessage({ message, setReadingText })
+    );
+
     return () => {
-      chrome.runtime.onMessage.removeListener(handler);
+      chrome.runtime.onMessage.removeListener(handleActionMessage);
     };
   }, []);
 
@@ -73,7 +41,7 @@ function App() {
           <div>
             <strong>Grade:</strong> {readingText.grade}
           </div>
-          <div>
+          <div style={{ marginTop: "10px" }}>
             <strong>Summary:</strong> {readingText.summary}
           </div>
         </div>
