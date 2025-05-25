@@ -10,14 +10,14 @@ type ReadabilityData = {
 };
 
 function App() {
-  const [data, setData] = useState<ReadabilityData | null>(null);
+  const [readingText, setReadingText] = useState<ReadabilityData | null>(null);
 
   useEffect(() => {
     // chrome.devtools.panels.create(
     //   "CS50: Evaluate Readability",
-    //   "assets/icons/icon16.png",
-    //   "src/panel/index.html",
-    //   (panel) => {
+    //   "",
+    //   "/public/panel.html",
+    //   function (panel) {
     //     console.log("panel created", panel);
     //   }
     // );
@@ -39,7 +39,7 @@ function App() {
       summary: string;
     }) => {
       if (action === "evaluateReadability") {
-        setData({
+        setReadingText({
           letterCount,
           wordCount,
           sentenceCount,
@@ -55,30 +55,30 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <h1>CS50: Evaluate Readability</h1>
-      {data ? (
+    <>
+      <h3>CS50: Evaluate Readability</h3>
+      {!readingText ? (
+        <div>No data yet. Select text and run the extension.</div>
+      ) : (
         <div>
           <div>
-            <strong>Letters:</strong> {data.letterCount}
+            <strong>Letters:</strong> {readingText.letterCount}
           </div>
           <div>
-            <strong>Words:</strong> {data.wordCount}
+            <strong>Words:</strong> {readingText.wordCount}
           </div>
           <div>
-            <strong>Sentences:</strong> {data.sentenceCount}
+            <strong>Sentences:</strong> {readingText.sentenceCount}
           </div>
           <div>
-            <strong>Grade:</strong> {data.grade}
+            <strong>Grade:</strong> {readingText.grade}
           </div>
           <div>
-            <strong>Summary:</strong> {data.summary}
+            <strong>Summary:</strong> {readingText.summary}
           </div>
         </div>
-      ) : (
-        <div>No data yet. Select text and run the extension.</div>
       )}
-    </div>
+    </>
   );
 }
 
