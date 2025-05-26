@@ -30,7 +30,7 @@ This generates a `build` folder suitable for use as a browser extension<br/>
   - Select the `build` directory.<br/>
   - The `readability helper extension` should now be installed and ready to use!<br/>
 
-<ins>Note</ins>: Any change on source code needs a repetition of `step 4` and `step 5` for the to be updated<br/>
+<ins>Note</ins>: Any change on source code, requires a new build (`step 4`) and loading (`step 5`)<br/>
 
 ### 📌 Usage
 1. Ensure the extension is properly installed and loaded.
