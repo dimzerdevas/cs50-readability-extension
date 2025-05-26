@@ -1,52 +1,66 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
+import {
+  GeneratedExplanation,
+  MissingReadingText,
+  ReadabilityEvaluation,
+} from "./components";
+import { useExplanation, useReadingText } from "./hooks";
+import { persistReadingData } from "./utils";
+import { Container } from "./style";
 import "./App.css";
-import type { ReadabilityData } from "./intefaces";
-import { handleActionMessage } from "./utils";
-import { LOCAL_STORAGE_KEY } from "./constants";
 
 function App() {
-  const [readingText, setReadingText] = useState<ReadabilityData | null>(null);
+  const { readingText } = useReadingText();
+  const { explanation, isLoadingExplanation, refetchExplanation } =
+    useExplanation({
+      text: readingText?.originalText || "",
+    });
+
+  // Track the last text we fetched for
+  const lastFetchedText = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (stored) {
-      setReadingText(JSON.parse(stored));
+    if (
+      readingText &&
+      readingText.originalText &&
+      lastFetchedText.current !== readingText.originalText
+    ) {
+      refetchExplanation();
+      lastFetchedText.current = readingText.originalText;
     }
+  }, [readingText, explanation, refetchExplanation]);
 
-    chrome.runtime.onMessage.addListener((message) =>
-      handleActionMessage({ message, setReadingText })
-    );
+    useEffect(() => {
+    if (readingText && explanation) {
+      persistReadingData({
+        ...readingText,
+        generatedResponse: explanation,
+      });
+    }
+  }, [readingText, explanation]);
 
-    return () => {
-      chrome.runtime.onMessage.removeListener(handleActionMessage);
-    };
-  }, []);
+  const { originalText, letterCount, wordCount, sentenceCount, grade } =
+    readingText || {};
+
+  if (!readingText) {
+    return <MissingReadingText />;
+  }
 
   return (
-    <>
-      <h3>CS50: Evaluate Readability</h3>
-      {!readingText ? (
-        <div>No data yet. Select text and run the extension.</div>
-      ) : (
-        <div>
-          <div>
-            <strong>Letters:</strong> {readingText.letterCount}
-          </div>
-          <div>
-            <strong>Words:</strong> {readingText.wordCount}
-          </div>
-          <div>
-            <strong>Sentences:</strong> {readingText.sentenceCount}
-          </div>
-          <div>
-            <strong>Grade:</strong> {readingText.grade}
-          </div>
-          <div style={{ marginTop: "10px" }}>
-            <strong>Summary:</strong> {readingText.summary}
-          </div>
-        </div>
-      )}
-    </>
+    <Container>
+      <h2>CS50: Evaluate Readability</h2>
+      <div>
+        <ReadabilityEvaluation
+          originalText={originalText}
+          letterCount={letterCount}
+          wordCount={wordCount}
+          sentenceCount={sentenceCount}
+          grade={Number(grade)}
+        />
+        {isLoadingExplanation && <p>Loading explanation...</p>}
+        <GeneratedExplanation generatedResponse={explanation || ""} />
+      </div>
+    </Container>
   );
 }
 

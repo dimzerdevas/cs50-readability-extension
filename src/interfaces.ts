@@ -3,5 +3,9 @@ export type ReadabilityData = {
     wordCount: number;
     sentenceCount: number;
     grade: number | string;
-    summary: string;
+    originalText: string;
 };
+
+export interface PersistentReadabilityData extends ReadabilityData {
+    generatedResponse: string;
+}
